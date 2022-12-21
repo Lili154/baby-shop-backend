@@ -26,6 +26,6 @@ npm install
 
 To test the application
 
-Postman
-nodemon server.js
+Postman,
+nodemon index.js
 
