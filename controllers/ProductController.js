@@ -4,7 +4,7 @@ export const getLastTags = async (req, res) => {
   try {
     const products = await ProductModel.find().limit(5).exec();
 
-    const tags = posts
+    const tags = products
       .map((obj) => obj.tags)
       .flat()
       .slice(0, 5);
@@ -13,14 +13,14 @@ export const getLastTags = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: 'Не удалось получить тэги',
+      message: 'Failed',
     });
   }
 };
 
 export const getAll = async (req, res) => {
   try {
-    const products = await ProductModel.find().populate('user').exec();
+    const products = await ProductModel.find().populate('product').exec();
     res.json(products);
   } catch (err) {
     console.log(err);
@@ -71,9 +71,9 @@ export const getOne = async (req, res) => {
 
 export const remove = async (req, res) => {
   try {
-    const postId = req.params.id;
+    const productId = req.params.id;
 
-    PostModel.findOneAndDelete(
+    ProductModel.findOneAndDelete(
       {
         _id:productId,
       },
@@ -120,25 +120,25 @@ export const create = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: 'Не удалось создать статью',
+      message: 'Could not create product',
     });
   }
 };
 
 export const update = async (req, res) => {
   try {
-    const postId = req.params.id;
+    const productId = req.params.id;
 
-    await PostModel.updateOne(
+    await productModel.updateOne(
       {
-        _id: postId,
+        _id: productId,
       },
       {
         title: req.body.title,
-        text: req.body.text,
+        desc: req.body.desc,
         imageUrl: req.body.imageUrl,
-        user: req.userId,
-        tags: req.body.tags.split(','),
+        price: req.priceId,
+        count: req.body.count
       },
     );
 
@@ -148,7 +148,7 @@ export const update = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: 'Не удалось обновить статью',
+      message: 'Could not update product',
     });
   }
 };
