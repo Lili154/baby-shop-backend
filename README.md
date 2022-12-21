@@ -16,16 +16,17 @@ This project was built to help you start express/mongo API with a boilerplate wh
 </ul> 
 
 ### Installing
-
-git clone https://github.com/Lili154/baby-shop-backend.git
-cd baby-shop-backend
-npm install
-
+<ul>
+	<li>git clone https://github.com/Lili154/baby-shop-backend.git</li>
+	<li>cd baby-shop-backend</li>
+	<li>npm install</li>
+</ul>
 
 ## Getting Started
 
 To test the application
-
-Postman,
-nodemon index.js
+<ul>
+	<li>Postman,</li>
+	<li>nodemon index.js</li>
+</ul>
 
