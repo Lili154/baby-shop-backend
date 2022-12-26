@@ -3,6 +3,19 @@ import crypto from "crypto-js";
 const router = express.Router();
 import {verifyToken, verifyTokenAndAuthorization,verifyTokenAndAdmin} from "./verifyToken.js";
 
+//CREATE
+
+    router.post("/add",verifyTokenAndAdmin, async (req, res) => {
+	const newProduct = new User(req.body);
+  
+	try {
+	  const savedUser = await newUser.save();
+	  res.status(200).json(savedUser);
+	} catch (error) {
+	  res.status(500).json(error);
+	}
+  });
+
 //Update
 router.put("/:id",verifyTokenAndAuthorization,async(req,res)=>{
 	if(req.body.password){
