@@ -1,7 +1,10 @@
 import express from "express";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
-import crypto from "crypto-js";
+import bcrypt from "bcrypt";
+import * as dotenv from 'dotenv' 
+dotenv.config()
+
 const router = express.Router();
 
 //Register
@@ -9,7 +12,7 @@ router.post("/register",async(req,res) => {
 	const newUser = new User({
 		username:req.body.username,
 		email:req.body.email,
-		password: CryptoJS.AES.encrypt(req.body.password,process.env.PASS_SEC).toString(),
+		password: bcrypt.hashSync(req.body.password,7)
 
 	});
 
@@ -17,7 +20,7 @@ router.post("/register",async(req,res) => {
 		const savedUser = await newUser.save();
 		res.status(201).json(savedUser)
 	}catch(err){
-		res.status(500).json(err)
+		res.status(500).json({"status":"user with this name or email already exists"})
 	}
 });
 
@@ -25,27 +28,34 @@ router.post("/register",async(req,res) => {
 router.post("/login",async(req,res) =>{
 	try{
 		const user = await User.findOne({username:req.body.username});
+console.log(user,user.password)
+		// !user && 
+		// res.status(401).json("Wrong credentials!")
 
-		!user && 
-		res.status(401).json("Wrong credentials!")
-
-		const hashedPassword = CryptoJS.AES.decrypt(
-			user.password,
-			process.env.PASS_SEC
+		const hashedPassword = await bcrypt.compareSync(
+			req.body.password,
+			user.password
+			
 		);
-		const OriginalPassword = hashedPassword.toString(CryptoJS.enc.Utf8)
+		console.log(hashedPassword,1111)
+		// const OriginalPassword = hashedPassword.toString(CryptoJS.enc.Utf8)
 
-		OriginalPassword !== req.body.password && 
-		res.status(401).json("Wrong credentials!")
-		
+		// hashedPassword !== req.body.password && 
+		// res.status(401).json("Wrong credentials!")
+		if(!hashedPassword ) {
+			return res.status(401).json("Wrong credentials!")
+		}
+
+console.log("dsdfd",process.env.JWT_SEC)
 		const accessToken = jwt.sign({
 			id:user._id,
 			isAdmin:user.isAdmin,
 		},
+		
 		process.env.JWT_SEC,
 		{expiresIn:"3d"}
 		);
-
+		console.log(accessToken,process.env.JWT_SEC,222)
 		const { password, ...others } = user._doc;
 
 		res.status(200).json({...others,accessToken});

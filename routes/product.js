@@ -12,7 +12,7 @@ import {
 
 //CREATE
 
-router.post("/add", async (req, res) => {
+router.post("/add",verifyTokenAndAdmin, async (req, res) => {
   const newProduct = new Product(req.body);
 
   try {
@@ -48,6 +48,7 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
     res.status(500).json(error);
   }
 });
+
 //GET PRODUCT
 router.get("/:id", async (req, res) => {
   try {

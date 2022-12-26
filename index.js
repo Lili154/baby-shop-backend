@@ -7,6 +7,8 @@ import productRouter from "./routes/product.js";
 import cartRouter from "./routes/cart.js";
 import orderRouter from "./routes/order.js";
 import cors from "cors";
+import * as dotenv from 'dotenv' 
+dotenv.config()
 
 
 const app = express();
@@ -26,7 +28,7 @@ app.use("/order", orderRouter);
 
 mongoose.set('strictQuery', true)
 mongoose
-.connect('mongodb+srv://lilit:lilit1989@cluster0.8zzk7ua.mongodb.net/shop?retryWrites=true&w=majority')
+.connect(process.env.MONGO_URL)
 .then(()=>console.log('DB ok'))
 .catch((err)=>console.log('DB error',err));	
 
